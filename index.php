@@ -10,9 +10,37 @@
 <head>
     <title>Algorithms Club</title>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 </head>
-<body>
-    
+<body style="background-color: #eee">
+    <div class="container">
+        <div class="col-lg-12" style="">
+            <div class="card" style="margin-top: 40px; padding: 30px;">
+                <center><h1 style="font-size: 3.5em; font-weight: 100">Welcome to the Autonomous Algorithms Home Page</h1></center>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="padding: 20px 50px 20px 50px; margin-right: 0">
+                <h3>Getting Started</h3>
+                <hr>
+                <ul>
+                    <a href="/docs/?doc=how-to-join.html">How to Join</a>
+                    <a href="#">Solving Puzzles</a>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-8" >
+            <div class="card" style="padding: 20px 50px 20px 50px; margin-left:0">
+                <h3>Current Puzzle</h3>
+                <hr>
+                <ul>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 <script src="/assets/js/bootstrap.js"
