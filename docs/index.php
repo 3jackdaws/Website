@@ -14,8 +14,8 @@ $doc = $_GET['doc'];
     <link rel="stylesheet" href="/assets/css/custom.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 </head>
-<body style="background-color: #eee">
-    <div class="container">
+<body style="background-color: #eee; min-height: 100%;">
+    <div class="container" style="min-height: 100%">
         <div class="col-lg-12" style="">
             <div class="card" style="margin-top: 40px; padding: 30px;">
                 <center><h1 style="font-size: 3.5em; font-weight: 100">Help Documents</h1></center>
@@ -27,46 +27,53 @@ $doc = $_GET['doc'];
                 <hr>
                 <ul>
                     <?php
-                        $files = glob(__DIR__ . "/files/*");
-//                    var_dump("/*", __DIR__ . "/files/");
-//                    var_dump($files);
-                        foreach($files as $file){
-                            $handle = fopen($file, "r");
-                            preg_match("/(?<=\>)[A-Za-z ]+(?=<)/", fread($handle, filesize($file)), $match);
-                            $title = $match[0];
-                            echo "<a onclick='openhelpdoc(\"". basename($file) ."\")'>" . $title . "</a>";
-                        }
+                    $link_file = file_get_contents("https://raw.githubusercontent.com/wiki/AutonomousAlgorithms/Documentation/Home.md");
+                    preg_match_all("#(?<=\[\[).+?(?=\]\])#", $link_file, $links);
+                    foreach ($links[0] as $link){
+                        echo "<a onclick='getdoc(\"" . $link . "\")'>" . $link . "</a>";
+                    }
                     ?>
                 </ul>
             </div>
         </div>
         <div class="col-lg-8" >
             <div id="content" class="card" style="padding: 20px 50px 20px 50px; margin-left:0">
-                
+                <h3>Welcome to the Help Pages</h3>
+                The documents on the left should help you get started solving puzzles.
             </div>
         </div>
+
     </div>
+    <a href="/" class="circle" style="position: fixed; top: 0; left: 0;background-color: #1E90FF; margin: 10%; margin-top: 50px; width: 50px; height: 50px; box-shadow: 1px 1px 5px rgba(0,0,0,.5); border: 1px solid white">
+        <span class="glyphicon glyphicon-home" style="font-size: 2em; color: white; margin: 20%;"></span>
+    </a>
+
 
 </body>
 <script>
-    function openhelpdoc(res){
+    function getdoc(res){
         var xhr = new XMLHttpRequest();
+        var link = res.replace(/ /g, "-");
+        var title = link.replace(/-/g, " ");
         xhr.onreadystatechange = function(){
             if(xhr.readyState == 4){
-                document.getElementById("content").innerHTML = xhr.responseText;
+                var cdiv = document.getElementById("content");
+                cdiv.innerHTML = "<h2>" + title + "</h2><hr>";
+                cdiv.innerHTML += xhr.responseText;
+                document.title = title;
             }
-        }
-        xhr.open("GET", "/docs/files/" + res);
+        };
+        xhr.open("GET", "/docs/get_wiki.php?page="+ link);
         xhr.send();
     }
 
-    window.onload = function(){
+    window.onload = function () {
         var doc = "<?=$doc?>";
-        if(doc.length < 2){
-            doc = "how-to-join.html";
+        if(doc.length > 2){
+            getdoc(doc);
         }
-        openhelpdoc(doc);
     }
+
 </script>
 <script src="/assets/js/bootstrap.js"
 </html>

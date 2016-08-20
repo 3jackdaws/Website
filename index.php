@@ -25,8 +25,15 @@
                 <h3>Getting Started</h3>
                 <hr>
                 <ul>
-                    <a href="/docs/?doc=how-to-join.html">How to Join</a>
-                    <a href="#">Solving Puzzles</a>
+                    <?php
+                    $wiki_base = "https://raw.githubusercontent.com/wiki/AutonomousAlgorithms/Documentation/";
+                    $link_file = file_get_contents($wiki_base . "Home.md");
+                    preg_match_all("#(?<=\[\[).+?(?=\]\])#", $link_file, $links);
+                    foreach ($links[0] as $title){
+                        $link = str_replace(" ", "-", $title);
+                        echo "<a href=\"/docs/?doc=" . $link . "\">" . $title . "</a>";
+                    }
+                    ?>
                 </ul>
             </div>
         </div>
