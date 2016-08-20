@@ -35,8 +35,24 @@ switch($action){
     }
     case "gettoken":
     {
-        $account = new Account($user, $password);
-        echo json_encode(["token" => $user->getToken()]);
+        if($token != null){
+            $account = new Account($token);
+        }
+        else{
+            $account = new Account($user, $password);
+        }
+        echo json_encode(["token" => $account->getToken()]);
+        break;
+    }
+    case "gentoken":
+    {
+        if($token != null){
+            $account = new Account($token);
+        }
+        else{
+            $account = new Account($user, $password);
+        }
+        $account->getNewToken();
         break;
     }
     default:

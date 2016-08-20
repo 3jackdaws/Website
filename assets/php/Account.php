@@ -35,10 +35,22 @@ class Account
     }
 
     public function getNewToken(){
-
+        $this->user['token'] = $this->generateToken();
+        $sql = "UPDATE users SET token=:token WHERE username=:user;";
+        $stmt = Database::connect()->prepare($sql);
+        $stmt->bindParam(":token", $this->user['token']);
+        $stmt->bindParam(":user", $this->user['username']);
+        if(!$stmt->execute()){
+            var_dump($stmt->errorInfo());
+            return false;
+        }else{
+            echo $this->getToken();
+            return true;
+        }
     }
 
     protected function generateToken(){
+        if(!$this->user['username']) return;
         $build = password_hash(microtime() ^ $this->user['username'], 1);
         return sprintf("%s-%s-%s", substr($build, 10,5),substr($build, 20,5),substr($build, 30,5));
     }
