@@ -16,13 +16,13 @@ $doc = $_GET['doc'];
 </head>
 <body style="background-color: #eee; min-height: 100%;">
     <div class="container" style="min-height: 100%">
-        <div class="col-lg-12" style="">
+        <div class="col-lg-12 nopad" style="">
             <div class="card" style="margin-top: 40px; padding: 30px;">
                 <center><h1 style="font-size: 3.5em; font-weight: 100">Help Documents</h1></center>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="card" style="padding: 20px 50px 20px 50px; margin-right: 0">
+        <div class="col-lg-4 nopad">
+            <div class="card" style="padding: 20px 50px 20px 50px; ">
                 <h3>Directory</h3>
                 <hr>
                 <ul>
@@ -30,14 +30,14 @@ $doc = $_GET['doc'];
                     $link_file = file_get_contents("https://raw.githubusercontent.com/wiki/AutonomousAlgorithms/Documentation/Home.md");
                     preg_match_all("#(?<=\[\[).+?(?=\]\])#", $link_file, $links);
                     foreach ($links[0] as $link){
-                        echo "<a onclick='getdoc(\"" . $link . "\")'>" . $link . "</a>";
+                        echo "<a href='#' onclick='getdoc(\"" . $link . "\")'>" . $link . "</a>";
                     }
                     ?>
                 </ul>
             </div>
         </div>
-        <div class="col-lg-8" >
-            <div id="content" class="card" style="padding: 20px 50px 20px 50px; margin-left:0">
+        <div class="col-lg-8 nopad" >
+            <div id="content" class="card" style="padding: 20px 50px 20px 50px; ">
                 <h3>Welcome to the Help Pages</h3>
                 The documents on the left should help you get started solving puzzles.
             </div>
