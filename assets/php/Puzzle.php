@@ -12,7 +12,7 @@ require_once 'Database.php';
 abstract class Puzzle
 {
     protected $type;
-    protected static $generator_path = "";
+
     public function __construct($puzzle_type)
     {
         if($puzzle_type == null) die("Puzzle constructor requires a puzzle type for its first argument");
@@ -38,4 +38,25 @@ abstract class Puzzle
     }
 
     public abstract function verifySolution($user, $pass, $solution);
+
+    public function getTopPlayers($number){
+        if(is_int($number)){
+            $sql = "SELECT username, maxlevel FROM " . $this->type . " ORDER BY maxlevel LIMIT " . $number;
+            $stmt = Database::connect()->prepare($sql);
+            $stmt->bindParam(":user", $user);
+            $stmt->execute();
+            return $stmt->fetch();
+        }
+        return false;
+    }
+
+    public function setUserPuzzleCache($puzzle, $user, $level, $data){
+        $sql = "INSERT INTO :puzzle_table (username, datacache, level) VALUES(:user, :data, :level) ON DUPLICATE KEY UPDATE username=:user, datacache=:data, level=:level;";
+        $stmt = Database::connect()->prepare($sql);
+        $stmt->bindParam(":puzzle_table", $puzzle);
+        $stmt->bindParam(":user", $user);
+        $stmt->bindParam(":level", $level);
+        $stmt->bindParam(":data", $data);
+        $stmt->execute();
+    }
 }
