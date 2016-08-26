@@ -9,7 +9,7 @@
 set_include_path(realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php');
 require_once 'Database.php';
 
-class GenericDatastore
+class PersistentDatastore
 {
     private $conn;
     private $group;
@@ -28,12 +28,21 @@ class GenericDatastore
         }
     }
 
+    public function __destruct()
+    {
+        $this->save();
+    }
+
     public function set($key, $value){
         $this->inner[$key] = $value;
     }
 
     public function get($key){
         return $this->inner[$key];
+    }
+
+    public function containsKey($key){
+        return array_key_exists($key, $this->inner);
     }
 
     public function save(){
