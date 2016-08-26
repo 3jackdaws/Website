@@ -89,7 +89,7 @@ class Account
                 echo "User successfully registered.";
             }
         }else{
-            die("User already exists.");
+            echo("User already exists.");
         }
 
     }

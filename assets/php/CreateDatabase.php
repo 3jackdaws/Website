@@ -41,3 +41,15 @@ time TIMESTAMP
 }else{
     echo "Created table ip_log<br>";
 }
+
+if(!$db->query("CREATE TABLE kv_store
+(
+kv_group VARCHAR(30) NOT NULL,
+kv_key VARCHAR(20),
+kv_value VARCHAR(1000),
+PRIMARY KEY (kv_group,kv_key)
+);")){
+    echo $db->errorInfo()[2] . "<br>";
+}else{
+    echo "Created table kv_store<br>";
+}

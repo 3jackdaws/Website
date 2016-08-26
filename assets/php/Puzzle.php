@@ -15,7 +15,10 @@ abstract class Puzzle
 
     public function __construct($puzzle_type)
     {
-        if($puzzle_type == null) die("Puzzle constructor requires a puzzle type for its first argument");
+        if($puzzle_type == null){
+            echo("Puzzle constructor requires a puzzle type for its first argument");
+            return null;
+        }
         $this->type = $puzzle_type;
     }
 
@@ -58,5 +61,18 @@ abstract class Puzzle
         $stmt->bindParam(":level", $level);
         $stmt->bindParam(":data", $data);
         $stmt->execute();
+    }
+
+    public function createNewPuzzleTable(){
+        $sql = "CREATE TABLE :puzzle_type(
+                username VARCHAR (38) NOT NULL UNIQUE,
+                datacache VARCHAR (32000),
+                level INTEGER,
+                maxlevel INTEGER ,
+                PRIMARY KEY (username)
+                );";
+        $stmt = Database::connect()->prepare($sql);
+        $stmt->bindParam(":puzzle_type", $this->type);
+        return $stmt->execute();
     }
 }

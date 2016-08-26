@@ -55,9 +55,10 @@ $doc = $_GET['doc'];
         var xhr = new XMLHttpRequest();
         var link = res.replace(/ /g, "-");
         var title = link.replace(/-/g, " ");
+        var cdiv = document.getElementById("content");
+        cdiv.innerHTML = "<div class='loader'>loading...</div>";
         xhr.onreadystatechange = function(){
             if(xhr.readyState == 4){
-                var cdiv = document.getElementById("content");
                 cdiv.innerHTML = "<h2>" + title + "</h2><hr>";
                 cdiv.innerHTML += xhr.responseText;
                 document.title = title;
