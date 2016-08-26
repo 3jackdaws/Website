@@ -6,8 +6,8 @@
  * Time: 9:39 PM
  */
 
-require_once 'Account.php';
-require_once "SecurityAgent.php";
+require_once '../Account.php';
+require_once "../SecurityAgent.php";
 
 $action = get("action");
 //$user = get("user");
@@ -34,5 +34,4 @@ else
     printf("Password Hash is %s", $account->getPasswordHash());
 }
 
-//Note to Ian, On line 92 of Account.php, would you please delete the user then re-create it?
-//That would be great for testing. Thx.
+//Note to Ian, On line 92 of Account.php, would you please printf instead of die, so the script can still continue?
