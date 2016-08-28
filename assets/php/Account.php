@@ -73,7 +73,7 @@ class Account
 
     public function removeFromDatabase(){
         sleep(1);
-        if(!$this->user['username']){
+        if($this->user['username']){
             $sql = "DELETE FROM users WHERE token=:token;";
             $statement = Database::connect()->prepare($sql);
             $statement->bindParam(':token', $this->user['token']);

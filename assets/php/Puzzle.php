@@ -44,7 +44,7 @@ abstract class Puzzle
 
     public function getTopPlayers($number){
         if(is_int($number)){
-            $sql = "SELECT username, maxlevel FROM " . $this->type . " ORDER BY maxlevel LIMIT " . $number;
+            $sql = "SELECT username, maxlevel FROM " . $this->type . " ORDER BY maxlevel DESC LIMIT " . $number;
             $stmt = Database::connect()->prepare($sql);
             $stmt->bindParam(":user", $user);
             $stmt->execute();
