@@ -22,15 +22,19 @@ if(isset($_GET['find'])){
     <div class="container">
         <div class="col-lg-12 nopad" style="">
             <div class="card" style="margin-top: 40px; padding: 30px;">
-                <center><h1 style="font-size: 3.5em; font-weight: 100">Welcome to the Autonomous Algorithms Home Page</h1></center>
+                <center>
+                    <h1 style="font-size: 3.5em; font-weight: 100">Autonomous Algorithms</h1>
+                    <h4>Sharpen your skills, solve puzzles with code</h4>
+                </center>
             </div>
         </div>
 
         <div class="col-lg-4 nopad">
             <div class="card" style="padding: 20px 50px 20px 50px;">
-                <h3>Getting Started</h3>
+                <h3>Links</h3>
                 <hr>
                 <ul>
+<!--                    <h4 class="section-header">Getting Started</h4>-->
                     <?php
                     $wiki_base = "https://raw.githubusercontent.com/wiki/AutonomousAlgorithms/Documentation/";
                     $link_file = file_get_contents($wiki_base . "Home.md");

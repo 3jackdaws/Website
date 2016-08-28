@@ -71,6 +71,23 @@ class Account
         return $this->user['passwd'];
     }
 
+    public function removeFromDatabase(){
+        sleep(1);
+        if($this->user['username']){
+            $sql = "DELETE FROM users WHERE token=:token;";
+            $statement = Database::connect()->prepare($sql);
+            $statement->bindParam(':token', $this->user['token']);
+            if(!$statement->execute()){
+                echo "Error deleting user: ";
+                var_dump($statement->errorInfo());
+            }else{
+                echo "User" . $this->user['username'] . " successfully deleted.";
+            }
+        }else{
+            echo("User doesn't exist.");
+        }
+    }
+
     public function createNew($user, $email, $password){
         sleep(1);
         if(!$this->user['username']){
@@ -89,7 +106,7 @@ class Account
                 echo "User successfully registered.";
             }
         }else{
-            die("User already exists.");
+            echo("User already exists.");
         }
 
     }
