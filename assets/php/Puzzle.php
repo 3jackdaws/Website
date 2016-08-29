@@ -30,8 +30,7 @@ abstract class Puzzle
         return $stmt->execute();
     }
 
-    public
-    function getPuzzleData($user, $level = null)
+    public function getPuzzleData($user, $level = null)
     {
         $cache = $this->getCachedLevelData($user);
         if (!$cache or $level > $cache['maxlevel']) return false; // User not found or user attempting to access level higher than maxlevel
@@ -40,8 +39,9 @@ abstract class Puzzle
         if ($cache['level'] != $level or $cache['datacache'] === null)
         {
             $root = realpath($_SERVER['DOCUMENT_ROOT']); // Website root
-            exec($root . '/' . static::$generator_path . " " . $user . " " . $level); // Path User Level
-            $file = getcwd() . '/' . static::$type . "_output.txt"; // e.g. Current_dir\sudoku_output
+            $output_file = $user . $level . '_' . static::$type . "_output.txt"; // e.g. amadeus10_sudoku_output.txt
+            exec($root . '/' . static::$generator_path . ' ' . $output_file . ' ' . $user . ' ' . $level); // Path Output_File User Level
+            $file = getcwd() . '/' . $output_file; // e.g. Current_dir\amadeus10_sudoku_output.txt
             $handle = fopen($file, "r");
             if ($handle)
             {
@@ -66,8 +66,7 @@ abstract class Puzzle
         return $cache;
     }
 
-    protected
-    function incrementMaxLevel($user)
+    protected function incrementMaxLevel($user)
     {
         $sql = "UPDATE " . static::$type . " SET maxlevel=maxlevel+1 WHERE username=:user;";
         $stmt = Database::connect()->prepare($sql);
@@ -75,8 +74,7 @@ abstract class Puzzle
         return $stmt->execute();
     }
 
-    protected
-    function getCachedLevelData($user)
+    protected function getCachedLevelData($user)
     {
         $sql = "SELECT * FROM " . static::$type . " WHERE username=:user LIMIT 1;";
         $stmt = Database::connect()->prepare($sql);
@@ -85,9 +83,7 @@ abstract class Puzzle
         return $stmt->fetch();
     }
 
-    public
-
-    abstract function verifySolution($user, $level, $solution);
+    public abstract function verifySolution($user, $level, $solution);
 
     public function getTopPlayers($number)
     {
