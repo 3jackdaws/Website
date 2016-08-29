@@ -31,6 +31,19 @@ PRIMARY KEY (username)
     echo "Created table sudoku<br>";
 }
 
+/*if(!$db->query("CREATE TABLE test
+(
+username VARCHAR (38) NOT NULL UNIQUE,
+datacache VARCHAR (32000),
+level INTEGER,
+maxlevel INTEGER ,
+PRIMARY KEY (username)
+);")){
+    echo $db->errorInfo()[2] . "<br>";
+}else{
+    echo "Created table test<br>";
+}*/
+
 if(!$db->query("CREATE TABLE ip_log
 (
 ip VARCHAR(15),

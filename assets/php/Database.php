@@ -17,9 +17,7 @@ class Database
      * @return PDO
      */
     public static function connect(){
-        if(self::$_connection instanceof PDO){
-
-        }else{
+        if(!self::$_connection instanceof PDO){
             self::_instantiate();
         }
         return self::$_connection;
