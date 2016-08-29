@@ -16,7 +16,6 @@ abstract class Puzzle
 
     public function __construct()
     {
-
     }
 
     public function createNewPuzzleTable()
