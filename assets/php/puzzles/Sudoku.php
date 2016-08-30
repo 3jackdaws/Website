@@ -12,20 +12,37 @@ require_once 'Puzzle.php';
 class Sudoku extends Puzzle
 {
     private $level;
-    private $username;
+    private $user;
+    private $puzzleN;
     private $puzzledata;
+    static $type = "sudoku";
+    static $generator_path = "assets/gen/SudokuGenerator.jar";
+    static $command = "java -jar";
     public function __construct()
     {
-        parent::__construct("sudoku");
     }
 
     public function verifySolution(Account $user, $level, $solution)
     {
-        $this->getUserPuzzle($user);
-        
-        // checkRows();
-        //checkCols();
+        $this->getUserPuzzle($user->getUsername());
+        if($level == $this->level){
+            $puzzle = [];
+            $n = $this->puzzleN;
+            $this->puzzledata = explode(" ",$this->puzzledata);
+            $this->dumpPuzzleData();
+//            for ($i = 0;$i<$n*$n; $i++){
+//
+//            }
+        }
         return false;
+    }
+
+    public function dumpPuzzleData(){
+        $n = $this->puzzleN;
+        for ($i = 0; $i<$n*$n; $i++){
+            echo $this->puzzledata[$i] . " ";
+        }
+        echo "<br>";
     }
     
     private function checkRows(){
