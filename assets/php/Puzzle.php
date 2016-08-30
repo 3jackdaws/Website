@@ -82,19 +82,14 @@ abstract class Puzzle
         return $stmt->fetch();
     }
 
-    public abstract function verifySolution($user, $level, $solution);
+    public abstract function verifySolution(Account $user, $level, $solution);
 
-<<<<<<< HEAD
-    public function getTopPlayers($number){
-        if(is_int($number)){
-            $sql = "SELECT username, maxlevel FROM " . $this->type . " ORDER BY maxlevel DESC LIMIT " . $number;
-=======
     public function getTopPlayers($number)
     {
         if (is_int($number))
         {
             $sql = "SELECT username, maxlevel FROM " . static::$type . " ORDER BY maxlevel DESC LIMIT " . $number;
->>>>>>> dbf9e215dddc48f68b09eb1914382ee98a023a76
+
             $stmt = Database::connect()->prepare($sql);
             $stmt->bindParam(":user", $user);
             $stmt->execute();
@@ -112,18 +107,5 @@ abstract class Puzzle
         $stmt->bindParam(":mlevel", $maxlevel);
         $stmt->bindParam(":data", $data);
         $stmt->execute();
-    }
-
-    public function createNewPuzzleTable(){
-        $sql = "CREATE TABLE :puzzle_type(
-                username VARCHAR (38) NOT NULL UNIQUE,
-                datacache VARCHAR (32000),
-                level INTEGER,
-                maxlevel INTEGER ,
-                PRIMARY KEY (username)
-                );";
-        $stmt = Database::connect()->prepare($sql);
-        $stmt->bindParam(":puzzle_type", $this->type);
-        return $stmt->execute();
     }
 }
