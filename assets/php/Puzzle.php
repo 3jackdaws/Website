@@ -52,7 +52,6 @@ abstract class Puzzle
             $handle = fopen($file, "r");
             if ($handle)
             {
-                $data = null;
                 $data = fread($handle, filesize($file));
 
                 fclose($handle);
