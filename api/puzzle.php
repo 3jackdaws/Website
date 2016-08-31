@@ -10,6 +10,7 @@ require_once realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php/StdHeader.php';
 require_once 'Database.php';
 require_once 'Account.php';
 require_once 'puzzles/Sudoku.php';
+require_once 'PersistentDatastore.php';
 
 function get($var){
     return isset($_GET[$var]) ? $_GET[$var] : $_POST[$var];
@@ -44,15 +45,10 @@ switch($action){
     {
         if(!isset($puzzle) or !isset($user)) throw new InvalidArgumentException("puzzle and user are required parameters");;
 
-        if($puzzle == "current"){
-
+        if(isset($token)){
+            getPuzzleData($puzzle, $level, $token);
         }else{
-            if(isset($token)){
-                getPuzzleData($puzzle, $level, $token);
-            }else{
-                getPuzzleData($puzzle, $level, $user, $pass);
-            }
-
+            getPuzzleData($puzzle, $level, $user, $pass);
         }
         break;
     }
