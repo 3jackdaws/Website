@@ -5,6 +5,7 @@
  * Date: 8/19/16
  * Time: 9:09 AM
  */
+require_once realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php/StdHeader.php';
 if(isset($_GET['find'])){
     $query = $_GET['find'];
 }else{
@@ -61,11 +62,11 @@ if(isset($_GET['find'])){
         </div>
         <div class="col-lg-8 nopad" >
             <div class="card" style="padding: 20px 50px 20px 50px; ">
-                <h3>Current Puzzle</h3>
-                <hr>
-                <ul>
 
-                </ul>
+                    <?php
+                    include "components/current_puzzle.php";
+                    ?>
+                
             </div>
         </div>
 
