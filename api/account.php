@@ -10,7 +10,8 @@ function get($var){
     return isset($_GET[$var]) ? $_GET[$var] : $_POST[$var];
 }
 
-set_include_path(realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php');
+require_once realpath($_SERVER['DOCUMENT_ROOT']) . "/assets/php/StdHeader.php";
+
 require_once 'Account.php';
 require_once "SecurityAgent.php";
 
@@ -20,6 +21,7 @@ $password = get("password");
 $token = get("token");
 $email = get("email");
 
+
 $agent = new SecurityAgent();
 $agent->LogAction("ACCOUNT:" . $action);
 
@@ -27,7 +29,9 @@ switch($action){
     case "register":
     {
         foreach (["user", "email", "password"] as $varname){
-            if($$varname == null) die("In order to register an account, you must provide the " . $varname . " parameter.");
+            if($$varname == null){
+                throw new InvalidArgumentException("You must provide the " . $varname . " parameter.");
+            }
         }
         $account = new Account($user, $password);
         $account->createNew($user, $email, $password);
@@ -57,7 +61,7 @@ switch($action){
     }
     default:
     {
-        die("You must specify an action");
+        throw new InvalidArgumentException("You must specify an action");
     }
 
 }

@@ -13,6 +13,7 @@ abstract class Puzzle
 {
     protected static $type = null;
     protected static $generator_path = null;
+    protected static $command = null;
 
     public function __construct()
     {
@@ -29,24 +30,29 @@ abstract class Puzzle
         return $stmt->execute();
     }
 
-    public function getPuzzleData($user, $level = null)
+    public function getPuzzleData(Account $user, $level = null)
     {
-        $cache = $this->getCachedLevelData($user);
-        if (!$cache or $level > $cache['maxlevel']) return false; // User not found or user attempting to access level higher than maxlevel
-
+        if(strlen($user->getToken())<5) throw new Exception("User password combo or token not known");
+        $cache = $this->getCachedLevelData($user->getUsername());
+        if ($level > $cache['maxlevel']) throw new Exception("Level not yet available"); // User not found or user attempting to access level higher than maxlevel
+        if(!$cache){
+            //add new user
+            $this->createPuzzleUser($user->getUsername(), -1, 0);
+            $cache = $this->getCachedLevelData($user->getUsername());
+        }
         if ($level === null) $level = $cache['maxlevel']; // Default to max level if none specified
         if ($cache['level'] != $level or $cache['datacache'] === null)
         {
             $root = realpath($_SERVER['DOCUMENT_ROOT']); // Website root
-            $output_file = $user . $level . '_' . static::$type . "_output.txt"; // e.g. amadeus10_sudoku_output.txt
-            exec($root . '/' . static::$generator_path . ' ' . $output_file . ' ' . $user . ' ' . $level); // Path Output_File User Level
+            $output_file = $user->getUsername() . $level . '_' . static::$type . "_output.txt"; // e.g. amadeus10_sudoku_output.txt
+            $full_command = static::$command . ' ' . $root . '/' . static::$generator_path . ' ' . $output_file . ' ' . $user->getUsername() . ' ' . $level;
+//            echo $full_command . " -- " . $output_file;
+            exec($full_command); // Path Output_File User Level
             $file = getcwd() . '/' . $output_file; // e.g. Current_dir\amadeus10_sudoku_output.txt
             $handle = fopen($file, "r");
             if ($handle)
             {
-                $data = null;
-                while (!feof($handle))
-                    $data .= fgets($handle);
+                $data = fread($handle, filesize($file));
 
                 fclose($handle);
                 unlink($file);
@@ -58,9 +64,9 @@ abstract class Puzzle
             $stmt = Database::connect()->prepare($sql);
             $stmt->bindParam(":datacache", $data);
             $stmt->bindParam(":level", $level);
-            $stmt->bindParam(":username", $user);
+            $stmt->bindParam(":username", $user->getUsername());
             $stmt->execute();
-            $cache = $this->getCachedLevelData($user);
+            $cache = $this->getCachedLevelData($user->getUsername());
         }
         return $cache;
     }
@@ -82,19 +88,14 @@ abstract class Puzzle
         return $stmt->fetch();
     }
 
-    public abstract function verifySolution($user, $level, $solution);
+    public abstract function verifySolution(Account $user, $level, $solution);
 
-<<<<<<< HEAD
-    public function getTopPlayers($number){
-        if(is_int($number)){
-            $sql = "SELECT username, maxlevel FROM " . $this->type . " ORDER BY maxlevel DESC LIMIT " . $number;
-=======
     public function getTopPlayers($number)
     {
         if (is_int($number))
         {
             $sql = "SELECT username, maxlevel FROM " . static::$type . " ORDER BY maxlevel DESC LIMIT " . $number;
->>>>>>> dbf9e215dddc48f68b09eb1914382ee98a023a76
+
             $stmt = Database::connect()->prepare($sql);
             $stmt->bindParam(":user", $user);
             $stmt->execute();
@@ -112,18 +113,5 @@ abstract class Puzzle
         $stmt->bindParam(":mlevel", $maxlevel);
         $stmt->bindParam(":data", $data);
         $stmt->execute();
-    }
-
-    public function createNewPuzzleTable(){
-        $sql = "CREATE TABLE :puzzle_type(
-                username VARCHAR (38) NOT NULL UNIQUE,
-                datacache VARCHAR (32000),
-                level INTEGER,
-                maxlevel INTEGER ,
-                PRIMARY KEY (username)
-                );";
-        $stmt = Database::connect()->prepare($sql);
-        $stmt->bindParam(":puzzle_type", $this->type);
-        return $stmt->execute();
     }
 }
