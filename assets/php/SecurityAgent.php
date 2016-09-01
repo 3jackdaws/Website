@@ -21,7 +21,6 @@ class SecurityAgent
 
     public function __destruct()
     {
-        echo "Destruct";
         $this->LogAction(basename($_SERVER['PHP_SELF']) . ": " . $this->loginfo);
     }
 
