@@ -69,7 +69,6 @@ else
                     if (!$result) echo "<p class='result'>Player not found!</p>";
                 }
                 ?>
-                <?= $results ?>
             </div>
         </div>
     </div>
