@@ -18,7 +18,7 @@ function searchDatabase($user)
             $sql = "SELECT username FROM " . $table . " WHERE username LIKE :user LIMIT 5;";
             $stmt = Database::connect()->prepare($sql);
             $stmt->bindParam(":user", $wild_user);
-            if(!$stmt->execute()) throw new Error("Could not execute wild user search or no users found.");
+            $stmt->execute();
             if ($result = $stmt->fetchAll(PDO::FETCH_ASSOC))
                 foreach ($result as $player)
                     array_push($found_users, $player['username']);
@@ -44,7 +44,7 @@ function searchExact($user)
             $sql = "SELECT maxlevel FROM " . $table . " WHERE username=:user;";
             $stmt = Database::connect()->prepare($sql);
             $stmt->bindParam(":user", $user);
-            if(!$stmt->execute()) throw new Error("Could not execute exact user search or no users found.");
+            $stmt->execute();
             if ($result = $stmt->fetchAll(PDO::FETCH_ASSOC))
                 foreach ($result as $player)
                     echo "<p class='result'>" . $table . " - " . ($player['maxlevel'] === null ? 0 : $player['maxlevel']) . "</p><br />";
