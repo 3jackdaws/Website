@@ -6,7 +6,7 @@
  * Time: 1:04 PM
  */
 require_once realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php/StdHeader.php';
-require_once '/Database.php';
+require_once 'Database.php';
 echo '<link rel="stylesheet" href="/assets/css/search_user.css">';
 
 function searchDatabase($user)
