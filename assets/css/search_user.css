@@ -1,0 +1,30 @@
+.result {
+    display: inline;
+    background: none;
+    border: none;
+    color: #333;
+    text-decoration: none;
+    font-size: larger;
+}
+
+.result-head {
+    display: inline-block;
+    background: none;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    text-decoration: none;
+    font-size: 150%;
+}
+
+.result-link {
+    background: none;
+    border: none;
+    color: #337ab7;
+    text-decoration: none;
+    font-size: larger;
+}
+
+.result-link:hover {
+    color: #23527c;
+    text-decoration: underline;
+}
