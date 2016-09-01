@@ -54,7 +54,7 @@ function searchExact($user)
         if ($table == "ip_log" or $table == "users" or $table == "kv_store") unset($db[$table]);
         else
         {
-            $sql = "SELECT * FROM " . $table . " WHERE username=:user;";
+            $sql = "SELECT maxlevel FROM " . $table . " WHERE username=:user;";
             $stmt = Database::connect()->prepare($sql);
             $stmt->bindParam(":user", $user);
             $stmt->execute();
