@@ -69,21 +69,22 @@ else
                     if (!$result) echo "<p class='result'>Player not found!</p>";
                 }
                 ?>
-                <?=$results?>
+                <?= $results ?>
             </div>
         </div>
-        <div class="col-lg-8 nopad">
-            <div class="card" style="padding: 20px 50px 20px 50px; ">
-
-                <?php
-                include "components/current_puzzle.php";
-                ?>
-
-            </div>
-        </div>
-
-
     </div>
+    <div class="col-lg-8 nopad">
+        <div class="card" style="padding: 20px 50px 20px 50px; ">
+
+            <?php
+            include "components/current_puzzle.php";
+            ?>
+
+        </div>
+    </div>
+
+
+</div>
 
 </body>
 

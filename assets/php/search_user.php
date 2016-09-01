@@ -21,7 +21,7 @@ function searchDatabase($user)
         if ($table == "ip_log" or $table == "users") unset($db[$table]);
         else
         {
-            $sql = "SELECT * FROM " . $table . " WHERE username LIKE :user LIMIT 5;";
+            $sql = "SELECT username FROM " . $table . " WHERE username LIKE :user LIMIT 5;";
             $stmt = Database::connect()->prepare($sql);
             $stmt->bindParam(":user", $wild_user);
             $stmt->execute();
