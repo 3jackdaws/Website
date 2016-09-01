@@ -47,7 +47,7 @@ PRIMARY KEY (username)
 if(!$db->query("CREATE TABLE ip_log
 (
 ip VARCHAR(15),
-action VARCHAR(20),
+action VARCHAR(128),
 time TIMESTAMP
 );")){
     echo $db->errorInfo()[2] . "<br>";
