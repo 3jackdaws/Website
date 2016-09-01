@@ -47,8 +47,8 @@ function searchExact($user)
         $stmt->execute();
         if ($result = $stmt->fetchAll(PDO::FETCH_ASSOC))
             foreach ($result as $player)
-                echo "<p class='result'>" . $table . " - " . ($player['maxlevel'] === null ? 0 : $player['maxlevel']) . "</p>" .
-                    "<p class='result' style='float: right;'>#" . findRank($user, $table) . "</p><br />";
+                echo "<div class='result'><span>" . $table . " - " . ($player['maxlevel'] === null ? 0 : $player['maxlevel']) .
+                    "</span><span style='float: right;'>#" . findRank($user, $table) . "</span></div>";
     }
     echo "</div>";
 }
