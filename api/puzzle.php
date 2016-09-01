@@ -7,15 +7,8 @@
  */
 
 require_once realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php/StdHeader.php';
-require_once 'Database.php';
 require_once 'Account.php';
 require_once 'puzzles/Sudoku.php';
-require_once 'PersistentDatastore.php';
-
-function get($var){
-    return isset($_GET[$var]) ? $_GET[$var] : $_POST[$var];
-}
-
 
 function getPuzzleData($puzzle, $level, $user_or_token, $password = null){
     if($password){
@@ -33,17 +26,17 @@ function getPuzzleData($puzzle, $level, $user_or_token, $password = null){
     }
 }
 
-$action = get("action");
-$puzzle = get("puzzle");
-$user = get("user");
-$pass = get("pass");
-$token = get("token");
-$level = get("level");
+$action = RestfulGet("action");
+$puzzle = RestfulGet("puzzle");
+$user = RestfulGet("user");
+$pass = RestfulGet("pass");
+$token = RestfulGet("token");
+$level = RestfulGet("level");
 
 switch($action){
     case "get":
     {
-        if(!isset($puzzle) or !isset($user)) throw new InvalidArgumentException("puzzle and user are required parameters");;
+        RestRequire(["puzzle", "user"]);
 
         if(isset($token)){
             getPuzzleData($puzzle, $level, $token);

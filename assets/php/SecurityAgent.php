@@ -11,15 +11,25 @@ require_once 'Database.php';
 
 class SecurityAgent
 {
-    private $sensitivity = 20;
-    public function __construct($sensitivity)
+    private $sensitivity;
+    private $loginfo = "";
+    public function __construct($sensitivity = 20)
     {
         if($sensitivity) $this->sensitivity = $sensitivity;
         $this->checkFrequency();
     }
 
+    public function __destruct()
+    {
+        echo "Destruct";
+        $this->LogAction(basename($_SERVER['PHP_SELF']) . ": " . $this->loginfo);
+    }
+
+    public function AddLogInfo($message){
+        $this->loginfo .= $message;
+    }
+
     public function LogAction($action){
-        $action;
         $now = time();
         $ip = $_SERVER['REMOTE_ADDR'];
         $sql = "INSERT INTO ip_log (ip, action, time) VALUES(:ip, :action, FROM_UNIXTIME(:now));";
@@ -40,9 +50,8 @@ class SecurityAgent
         $stmt->execute();
         $freq = $stmt->fetch()[0];
         if($freq > $this->sensitivity) trigger_error(self::DISCONNECT_SPAM, E_USER_ERROR);
-        else{
-            sleep($freq - 10);
-        }
+        else if($freq > 10) sleep($freq - 10);
+
     }
 
     const DISCONNECT_SPAM = "Too many requests in a given time.";

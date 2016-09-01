@@ -6,33 +6,22 @@
  * Time: 12:06 PM
  */
 
-function get($var){
-    return isset($_GET[$var]) ? $_GET[$var] : $_POST[$var];
-}
-
-require_once realpath($_SERVER['DOCUMENT_ROOT']) . "/assets/php/StdHeader.php";
+include_once realpath($_SERVER['DOCUMENT_ROOT']) . "/assets/php/StdHeader.php";
 
 require_once 'Account.php';
-require_once "SecurityAgent.php";
 
-$action = get("action");
-$user = get("user");
-$password = get("password");
-$token = get("token");
-$email = get("email");
+$action = RestfulGet("action");
+$user = RestfulGet("user");
+$password = RestfulGet("password");
+$token = RestfulGet("token");
+$email = RestfulGet("email");
 
-
-$agent = new SecurityAgent();
-$agent->LogAction("ACCOUNT:" . $action);
+$SECURITY_AGENT->AddLogInfo("Action: " . $action. "User: " . $user . " " . "Token: " . $token);
 
 switch($action){
     case "register":
     {
-        foreach (["user", "email", "password"] as $varname){
-            if($$varname == null){
-                throw new InvalidArgumentException("You must provide the " . $varname . " parameter.");
-            }
-        }
+        RestRequire(["user", "email", "pass"]);
         $account = new Account($user, $password);
         $account->createNew($user, $email, $password);
         break;
