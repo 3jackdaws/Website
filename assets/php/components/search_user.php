@@ -74,8 +74,7 @@ function findRank($user, $puzzle)
 }
 
 echo '<link rel="stylesheet" href="/assets/css/search_user.css">';
-
-findRank("amadeus", "sudoku");
+sleep(1);
 if (isset($_GET['find']) and $_GET['find'] !== '')
 {
     $result = searchDatabase($_GET['find']);
