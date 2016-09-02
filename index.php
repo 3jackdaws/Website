@@ -63,7 +63,6 @@ else
             <div id="search-results">
                 <?php
                 require_once "assets/php/search_user.php";
-                findRank("amadeus", "sudoku");
                 if (isset($_GET['find']) and $_GET['find'] !== '')
                 {
                     $result = searchDatabase($_GET['find']);
