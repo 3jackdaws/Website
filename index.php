@@ -8,7 +8,7 @@
 require_once realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php/StdHeader.php';
 if (isset($_GET['find']))
 {
-    $query = $_GET['find'];
+    $additional = "search('" . $_GET['find'] . "');";
 }
 else
 {
@@ -57,7 +57,7 @@ else
         <div class="card" style="padding: 20px 50px 20px 50px;">
             <h3>Search for player</h3>
             <hr>
-            <form onkeydown="search(event)">
+            <form onkeydown="swrap(event)">
                 <input class="form-control" name="find" placeholder="username" />
             </form>
             <div id="search-results">
@@ -80,11 +80,16 @@ else
 
 </body>
 <script>
-    function search(event){
+    function swrap(event){
+        var user = document.getElementsByName("find")[0].value;
         if(event.keyCode != 13) return;
         event.preventDefault();
+        search(user);
+    }
+
+    function search(user){
+
         document.getElementById("search-results").innerHTML = "<div class='loader'>loading...</div>";
-        var user = document.getElementsByName("find")[0].value;
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if(xhr.readyState == 4){
@@ -95,6 +100,9 @@ else
         xhr.send();
         return false;
     }
+    window.addEventListener("load", function () {
+        <?=$additional?>
+    });
 </script>
 <script src="/assets/js/bootstrap.js"></script>
 </html>
