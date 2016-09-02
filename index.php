@@ -8,7 +8,7 @@
 require_once realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php/StdHeader.php';
 if (isset($_GET['find']))
 {
-    $query = $_GET['find'];
+    $additional = "search('" . $_GET['find'] . "');";
 }
 else
 {
@@ -57,19 +57,11 @@ else
         <div class="card" style="padding: 20px 50px 20px 50px;">
             <h3>Search for player</h3>
             <hr>
-            <form action="" method="get">
-                <input class="form-control" name="find" placeholder="username"/>
+            <form onkeydown="swrap(event)">
+                <input class="form-control" name="find" placeholder="username" />
             </form>
             <div id="search-results">
-                <?php
-                require_once "assets/php/search_user.php";
-                findRank("amadeus", "sudoku");
-                if (isset($_GET['find']) and $_GET['find'] !== '')
-                {
-                    $result = searchDatabase($_GET['find']);
-                    if (!$result) echo "<p class='result'>Player not found!</p>";
-                }
-                ?>
+
             </div>
         </div>
     </div>
@@ -87,6 +79,30 @@ else
 </div>
 
 </body>
+<script>
+    function swrap(event){
+        var user = document.getElementsByName("find")[0].value;
+        if(event.keyCode != 13) return;
+        event.preventDefault();
+        search(user);
+    }
 
-<script src="/assets/js/bootstrap.js"
+    function search(user){
+
+        document.getElementById("search-results").innerHTML = "<div class='loader'>loading...</div>";
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if(xhr.readyState == 4){
+                document.getElementById("search-results").innerHTML = xhr.responseText;
+            }
+        }
+        xhr.open("GET", "/assets/php/components/search_user.php?find="+user, true);
+        xhr.send();
+        return false;
+    }
+    window.addEventListener("load", function () {
+        <?=$additional?>
+    });
+</script>
+<script src="/assets/js/bootstrap.js"></script>
 </html>

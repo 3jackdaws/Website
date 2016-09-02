@@ -7,7 +7,7 @@
  */
 require_once realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php/StdHeader.php';
 require_once 'Database.php';
-echo '<link rel="stylesheet" href="/assets/css/search_user.css">';
+
 
 function searchDatabase($user)
 {
@@ -47,8 +47,8 @@ function searchExact($user)
         $stmt->execute();
         if ($result = $stmt->fetchAll(PDO::FETCH_ASSOC))
             foreach ($result as $player)
-                echo "<p class='result'>" . $table . " - " . ($player['maxlevel'] === null ? 0 : $player['maxlevel']) . "</p>" .
-                    "<p class='result' style='float: right;'>#" . findRank($user, $table) . "</p><br />";
+                echo "<div class='result'><span>" . $table . " - " . ($player['maxlevel'] === null ? 0 : $player['maxlevel']) .
+                    "</span><span style='float: right;'>#" . findRank($user, $table) . "</span></div>";
     }
     echo "</div>";
 }
@@ -72,3 +72,12 @@ function findRank($user, $puzzle)
             if ($player['username'] == $user) return $rank;
         }
 }
+
+echo '<link rel="stylesheet" href="/assets/css/search_user.css">';
+
+if (isset($_GET['find']) and $_GET['find'] !== '')
+{
+    $result = searchDatabase($_GET['find']);
+    if (!$result) echo "<p class='result'>Player not found!</p>";
+}
+                
