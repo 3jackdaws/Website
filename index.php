@@ -57,7 +57,7 @@ else
         <div class="card" style="padding: 20px 50px 20px 50px;">
             <h3>Search for player</h3>
             <hr>
-            <form onkeyup="search()">
+            <form onkeydown="search(event)">
                 <input class="form-control" name="find" placeholder="username" />
             </form>
             <div id="search-results">
@@ -80,7 +80,10 @@ else
 
 </body>
 <script>
-    function search(){
+    function search(event){
+        if(event.keyCode != 13) return;
+        event.preventDefault();
+        document.getElementById("search-results").innerHTML = "<div class='loader'>loading...</div>";
         var user = document.getElementsByName("find")[0].value;
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
