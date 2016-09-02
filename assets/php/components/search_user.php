@@ -7,7 +7,7 @@
  */
 require_once realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php/StdHeader.php';
 require_once 'Database.php';
-echo '<link rel="stylesheet" href="/assets/css/search_user.css">';
+
 
 function searchDatabase($user)
 {
@@ -72,3 +72,13 @@ function findRank($user, $puzzle)
             if ($player['username'] == $user) return $rank;
         }
 }
+
+echo '<link rel="stylesheet" href="/assets/css/search_user.css">';
+
+findRank("amadeus", "sudoku");
+if (isset($_GET['find']) and $_GET['find'] !== '')
+{
+    $result = searchDatabase($_GET['find']);
+    if (!$result) echo "<p class='result'>Player not found!</p>";
+}
+                
