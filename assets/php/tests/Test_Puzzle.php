@@ -14,7 +14,7 @@ class Test_Puzzle extends Puzzle
     protected static $type = "test";
     protected static $generator_path = "assets/exe/GenTest.exe";
 
-    public function verifySolution($user, $level, $solution)
+    public function verifySolution(Account $user, $level, $solution)
     {
         $this->incrementMaxLevel($user);
         return true;
