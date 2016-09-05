@@ -32,6 +32,8 @@ else
     printf("Email is %s", $account->getEmail());
     printf("GetToken returns %s", $account->getToken());
     printf("Password Hash is %s", $account->getPasswordHash());
+    printf("Removing account from database");
+    $account->removeFromDatabase();
 }
 
 //Note to Ian, On line 92 of Account.php, would you please printf instead of die, so the script can still continue?
