@@ -12,12 +12,7 @@ require_once 'Puzzle.php';
 class Test_Puzzle extends Puzzle
 {
     protected static $type = "test";
-    protected static $generator_path = "assets/exe/GenTest.exe";
-
-    public function verifySolution($user, $level, $solution)
-    {
-        $this->incrementMaxLevel($user);
-        return true;
-    }
+    protected static $generator_path = "assets/gen/GenTest.exe";
+    protected static $command = null;
 }
 

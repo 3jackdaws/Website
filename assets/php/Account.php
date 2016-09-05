@@ -94,6 +94,7 @@ class Account
             $sql = "INSERT INTO users (username, email, token, passwd) VALUES(:user, :email, :token, :passhash);";
             $statement = Database::connect()->prepare($sql);
             $hash = password_hash($password, PASSWORD_BCRYPT);
+            $this->user['username'] = $user;
             $this->user['token'] = $this->generateToken();
             $statement->bindParam(':user', $user);
             $statement->bindParam(':email', $email);

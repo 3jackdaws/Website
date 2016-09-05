@@ -25,7 +25,7 @@ require_once('Database.php');
 require_once('SecurityAgent.php');
 require_once('JSONResponse.php');
 require_once('PersistentDatastore.php');
-
+require_once('Account.php');
 
 
 const PUZZLE_TABLES = [ "sudoku",
