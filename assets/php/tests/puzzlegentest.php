@@ -15,7 +15,7 @@ echo '<p>Testing...</p>';
 $account = new Account("Amadeus", "NotAGoodPassword");
 echo $account->getUsername() . ' ' . $account->getEmail() . ' ' . $account->getToken() . "<br />";
 
-$gen = new Test_Puzzle();
+$gen = new TestPuzzle();
 $gen->createNewPuzzleTable();
 $gen->createPuzzleUser($account, 0, 10, null); // Generate sample user
 

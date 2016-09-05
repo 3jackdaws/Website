@@ -67,7 +67,8 @@ abstract class Puzzle
             $stmt = Database::connect()->prepare($sql);
             $stmt->bindParam(":datacache", $data);
             $stmt->bindParam(":level", $level);
-            $stmt->bindParam(":username", $user->getUsername());
+            $username = $user->getUsername();
+            $stmt->bindParam(":username", $username);
             $stmt->execute();
             $cache = $this->getCachedLevelData($user->getUsername());
         }
