@@ -1,0 +1,9 @@
+.running{
+    animation: pulse 1.8s infinite ease-in-out;
+}
+
+
+@keyframes pulse {
+    from{background-color: #80ccff}
+    to {background-color: white}
+}

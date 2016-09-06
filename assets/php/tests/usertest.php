@@ -15,11 +15,9 @@ $password = "testpassword";
 $email = "tommy@tommydrum.net";
 
 
-echo "Creating test user" . "<br>";
-$account = new Account($user, $password);
-$account->createNew($user, $email, $password);
-echo "Do puzzle tests" . "<br>";
+$account = new Account($user, $password, $email);
 
+//Sudoku test
 printf("Sudoku test");
 $puzzle = new Sudoku();
 $puzzle->createPuzzleUser($user);

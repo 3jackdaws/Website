@@ -13,8 +13,6 @@ $email = "tommy@tommydrum.net";
 
 
 $account = new Account($user, $password, $email);
-if($account == false) $account = new Account($user, $password);
-
 
 //Check that a newly created user account has the correct values
 assert($user == $account->getUsername(), "Check if Account object holds correct username");
