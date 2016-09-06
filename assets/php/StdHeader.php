@@ -14,6 +14,7 @@ set_include_path(realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php');
 set_exception_handler(function (Throwable $exception){
     if(get_class($exception) == "Error"){
         error_log("PHP Error on line " . $exception->getLine() . " of " . $exception->getFile() . ". " . $exception->getMessage());
+        trigger_error("Fatal Error", E_USER_ERROR);
     }
     else{
         echo "<span class='php-error-heading'>[" . get_class($exception) . "]</span><span class='php-error-body'>" . $exception->getMessage() . "</span>";

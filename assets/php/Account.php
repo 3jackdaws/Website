@@ -8,12 +8,16 @@
  */
 set_include_path(realpath($_SERVER['DOCUMENT_ROOT']) . '/assets/php');
 require_once 'Database.php';
+require_once 'exception/AuthenticationException.php';
 class Account
 {
     protected $user;
 
-    public function __construct($token_or_user, $password = null)
+    public function __construct($token_or_user, $password = null, $email = null)
     {
+        if($email){
+            $this->createNew($token_or_user, $email, $password);
+        }
         if ($password) {
             $sql = "SELECT * FROM users WHERE username=:user;";
             $statement = Database::connect()->prepare($sql);
@@ -22,7 +26,8 @@ class Account
             $this->user = $statement->fetch();
             if($this->user['username']){
                 if(!password_verify($password, $this->user['passwd'])){
-                    die("Unknown user and password combination.");
+                    $this->user['passwd'] = null;
+                    throw new AuthenticationException("Unknown user and password combination.", $this);
                 }
             }
         }else{
@@ -44,14 +49,12 @@ class Account
             var_dump($stmt->errorInfo());
             return false;
         }else{
-            echo $this->getToken();
-            return true;
+            return $this->getToken();
         }
     }
 
     protected function generateToken(){
-        if(!$this->user['username']) return;
-        $build = password_hash(microtime() ^ $this->user['username'], 1);
+        $build = password_hash(microtime(), 1);
         return sprintf("%s-%s-%s", substr($build, 10,5),substr($build, 20,5),substr($build, 30,5));
     }
 
@@ -74,17 +77,16 @@ class Account
     public function removeFromDatabase(){
         sleep(1);
         if($this->user['username']){
-            $sql = "DELETE FROM users WHERE token=:token;";
+            $sql = "DELETE FROM users WHERE username=:username;";
             $statement = Database::connect()->prepare($sql);
-            $statement->bindParam(':token', $this->user['token']);
+            $statement->bindParam(':username', $this->user['username']);
             if(!$statement->execute()){
-                echo "Error deleting user: ";
-                var_dump($statement->errorInfo());
+                return false;
             }else{
-                echo "User" . $this->user['username'] . " successfully deleted.";
+                return true;
             }
         }else{
-            echo("User doesn't exist.");
+            return false;
         }
     }
 
@@ -100,13 +102,12 @@ class Account
             $statement->bindParam(':token', $this->user['token']);
             $statement->bindParam(':passhash', $hash);
             if(!$statement->execute()){
-                echo "Error inserting user: ";
-                var_dump($statement->errorInfo());
+                return false;
             }else{
-                echo "User successfully registered.";
+                return true;
             }
         }else{
-            echo("User already exists.");
+            return false;
         }
 
     }
