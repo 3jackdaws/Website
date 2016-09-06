@@ -21,15 +21,22 @@ function assert_handler($file, $line, $code, $desc = null)
 };
 assert_options(ASSERT_CALLBACK, 'assert_handler');
 
+set_error_handler(function($errno, $errstr, $errline, $errfile){
+    echo "PHP Error: " . $errstr . " at line " . $errline . " in " . $errfile . "<br>";
+    trigger_error("PHP Error: " . $errstr . " at line " . $errline . " in " . $errfile, E_USER_ERROR);
+});
+
+set_exception_handler(function (Throwable $exception){
+
+    echo "<span class='php-error-heading'>[" . get_class($exception) . "]</span><span class='php-error-body'>" . $exception->getMessage() . " at " . $exception->getFile() . ":" . $exception->getLine(). "</span>";
+    trigger_error("TEST FAILED: " . $exception->getFile());
+});
+
 if(isset($_GET['test'])){
     ob_start();
-    try{
-        include(realpath($_SERVER['DOCUMENT_ROOT']) . "/assets/php/tests/". $_GET["test"]);
-    }catch(Throwable $e){
-        echo $e->getMessage() . "<br>";
-        echo ob_get_clean();
-        trigger_error("Test Threw Error", E_USER_ERROR);
-    }
+
+    include(realpath($_SERVER['DOCUMENT_ROOT']) . "/assets/php/tests/". $_GET["test"]);
+
     echo ob_get_clean();
 }else{
     echo "Test file name was not provided<br>";

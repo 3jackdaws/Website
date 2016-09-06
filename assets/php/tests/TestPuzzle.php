@@ -12,7 +12,7 @@ require_once 'Puzzle.php';
 class TestPuzzle extends Puzzle
 {
     protected static $type = "test";
-    protected static $generator_path = "assets/gen/GenTest.exe";
-    protected static $command = null;
+    protected static $generator_path = "assets/gen/test_generator.php";
+    protected static $command = "php";
 }
 

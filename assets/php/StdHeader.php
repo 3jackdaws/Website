@@ -17,7 +17,7 @@ set_exception_handler(function (Throwable $exception){
         trigger_error("Fatal Error", E_USER_ERROR);
     }
     else{
-        echo "<span class='php-error-heading'>[" . get_class($exception) . "]</span><span class='php-error-body'>" . $exception->getMessage() . "</span>";
+        echo "<span class='php-error-heading'>[" . get_class($exception) . "]</span><span class='php-error-body'>" . $exception->getMessage() . " at " . $exception->getFile() . ":" . $exception->getLine(). "</span>";
     }
     exit();
 });

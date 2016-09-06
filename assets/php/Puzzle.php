@@ -47,21 +47,14 @@ abstract class Puzzle
         if ($cache['level'] != $level or $cache['datacache'] === null)
         {
             $root = realpath($_SERVER['DOCUMENT_ROOT']); // Website root
-            $output_file = $user->getUsername() . $level . '_' . static::$type . "_output.txt"; // e.g. amadeus10_sudoku_output.txt
-            $full_command = static::$command . ' ' . $root . '/' . static::$generator_path . ' ' . $output_file . ' ' .
-                " generate " . $user->getUsername() . ' ' . $level; // exec root\generator.exe output.txt generate amadeus 10
-            exec($full_command); // Path Output_File User Level
-            $file = getcwd() . '/' . $output_file; // e.g. Current_dir\amadeus10_sudoku_output.txt
-            $handle = fopen($file, "r");
-            if ($handle)
-            {
-                $data = fread($handle, filesize($file));
+            $genuser = $user->getUsername();
 
-                fclose($handle);
-                unlink($file);
+            exec(static::$command . " " . $root . "/" . static::$generator_path . " generate " . $genuser . " " . $level, $output); // Path Output_File User Level
+            $data = "";
+            foreach ($output as $line){
+                $data .= $line . "\n";
             }
-            else
-                throw new Exception("Output file does not properly exist or generator failed.");
+            echo $data;
 
             $sql = "UPDATE " . static::$type . " SET datacache=:datacache, level=:level WHERE username=:username;";
             $stmt = Database::connect()->prepare($sql);
@@ -101,24 +94,17 @@ abstract class Puzzle
         if ($cache['level'] === null) return false;
 
         $root = realpath($_SERVER['DOCUMENT_ROOT']); // Website root
-        $verify_file = $user->getUsername() . $cache['level'] . '_' . static::$type . "_verify.txt"; // e.g. amadeus10_sudoku_verify.txt
-        $full_command = static::$command . ' ' . $root . '/' . static::$generator_path . ' ' . $verify_file . ' ' .
-            " verify " . $user->getUsername() . ' ' . $cache['level'] . ' ' . $solution; // exec root\generator.exe verify.txt verify amadeus 10 solution
-        exec($full_command); // Path Output_File User Level
-        $file = getcwd() . '/' . $verify_file; // e.g. Current_dir\amadeus10_sudoku_output.txt
-        $handle = fopen($file, "r");
-        if ($handle)
-        {
-            $data = fread($handle, filesize($file));
-            $data = strstr($data, PHP_EOL, true);
+        $genuser = $user->getUsername();
+        $data = "";
 
-            fclose($handle);
-            unlink($file);
+
+        exec(static::$command . " " . $root . "/" . static::$generator_path . " verify " . $genuser . " " . $cache['level'] . " " . $solution, $output); // Path Output_File User Level
+
+        foreach($output as $line){
+            $data .= $line . "\n";
         }
-        else
-            throw new Exception("Output file does not properly exist or generator failed.");
-
-        return (strcmp($data, "true") == 0 ? true : false); // Returns true if file reads "true", else returns false
+        echo $data;
+        return (strpos($data, "true") !== false ? true : false); // Returns true if file reads "true", else returns false
     }
 
     public function getTopPlayers($number)
