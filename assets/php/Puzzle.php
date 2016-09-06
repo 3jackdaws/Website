@@ -34,12 +34,12 @@ abstract class Puzzle
     public function getPuzzleData(Account $user, $level = null)
     {
         if (strlen($user->getToken()) < 5) throw new Exception("User password combo or token not known");
-        $cache = $this->getCachedLevelData($user->getUsername());
+        $cache = $this->getCachedLevelData($user);
         if (!$cache)
         {
             //add new user
-            $this->createPuzzleUser($user->getUsername(), -1, 0);
-            $cache = $this->getCachedLevelData($user->getUsername());
+            $this->createPuzzleUser($user, -1, 0);
+            $cache = $this->getCachedLevelData($user);
         }
         if ($level > $cache['maxlevel'] or $level < 0) throw new Exception("Level not yet available"); // User not found or user attempting to access level higher than maxlevel
         if ($level === null) $level = $cache['maxlevel']; // Default to max level if none specified
@@ -70,31 +70,33 @@ abstract class Puzzle
             $username = $user->getUsername();
             $stmt->bindParam(":username", $username);
             $stmt->execute();
-            $cache = $this->getCachedLevelData($user->getUsername());
+            $cache = $this->getCachedLevelData($user);
         }
         return $cache;
     }
 
-    protected function incrementMaxLevel($user)
+    protected function incrementMaxLevel(Account $user)
     {
         $sql = "UPDATE " . static::$type . " SET maxlevel=maxlevel+1 WHERE username=:user;";
         $stmt = Database::connect()->prepare($sql);
-        $stmt->bindParam(":user", $user);
+        $username = $user->getUsername();
+        $stmt->bindParam(":user", $username);
         return $stmt->execute();
     }
 
-    protected function getCachedLevelData($user)
+    protected function getCachedLevelData(Account $user)
     {
         $sql = "SELECT * FROM " . static::$type . " WHERE username=:user LIMIT 1;";
         $stmt = Database::connect()->prepare($sql);
-        $stmt->bindParam(":user", $user);
+        $username = $user->getUsername();
+        $stmt->bindParam(":user", $username);
         $stmt->execute();
         return $stmt->fetch();
     }
 
     public function verifySolution(Account $user, $solution)
     {
-        $cache = $this->getCachedLevelData($user->getUsername());
+        $cache = $this->getCachedLevelData($user);
         if (!$cache) throw new Exception("User " . $user->getUsername() . " does not exist.");
         if ($cache['level'] === null) return false;
 
@@ -124,10 +126,9 @@ abstract class Puzzle
         if (is_int($number))
         {
             $sql = "SELECT username, maxlevel FROM " . static::$type . " ORDER BY maxlevel DESC LIMIT " . $number;
-
             $stmt = Database::connect()->prepare($sql);
-            $stmt->bindParam(":user", $user);
             $stmt->execute();
+
             return $stmt->fetchAll(PDO::FETCH_ASSOC); // Key/ value pairs only
         }
         return false;
