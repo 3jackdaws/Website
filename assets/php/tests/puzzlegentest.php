@@ -25,7 +25,7 @@ $account = new Account("highscore", "AlsoABadPassword", "email@email.ca");
 $gen->createPuzzleUser($account, 0, 1000, null); // Test top players
 $gen->getPuzzleData($account);
 
-var_dump($top = $gen->getTopPlayers(10));
+//var_dump($top = $gen->getTopPlayers(10));
 
 echo '<br />';
 

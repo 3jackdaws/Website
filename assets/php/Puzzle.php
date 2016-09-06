@@ -103,7 +103,6 @@ abstract class Puzzle
         foreach($output as $line){
             $data .= $line . "\n";
         }
-        echo $data;
         return (strpos($data, "true") !== false ? true : false); // Returns true if file reads "true", else returns false
     }
 
