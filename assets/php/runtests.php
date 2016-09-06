@@ -31,11 +31,11 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="list-group">
-                <a class="list-group-item list-group-item-heading"><b>Run all tests</b></a>
+                <a onclick="runAllTests()" href="#" class="list-group-item list-group-item-heading"><b>Run all tests</b></a>
             <?php
             $files = glob("./tests/*");
             foreach ($files as $testfile){
-                echo "<a href='#' onclick='runTest(\"". basename($testfile) . "\", this)' class='list-group-item'>" . basename($testfile) . "</a>";
+                echo "<a href='#' name=\"test\" onclick='runTest(\"". basename($testfile) . "\", this)' class='list-group-item'>" . basename($testfile) . "</a>";
             }
             ?>
             </div>
@@ -48,9 +48,17 @@
 </div>
 </body>
 <script>
+    function runAllTests(){
+        var tests = document.getElementsByName("test");
+        for(var i = 0; i<tests.length; i++){
+            runTest(tests[i].innerHTML, tests[i]);
+        }
+    }
+
     function runTest(testScript, element){
-        var base = "/assets/php/tests/";
+        var base = "/assets/php/components/test_wrapper.php?test=";
         var div = element;
+        div.style.fontWeight = "bold";
         get(base + testScript, "", function (data, responsetype) {
             var newstuff = "";
             newstuff += "<span style=\"color: #fff\">" + testScript + "</span> &middot; ";

@@ -6,21 +6,19 @@
  * Time: 5:24 PM
  */
 
-require_once  '../Account.php';
-require_once '../SecurityAgent.php';
+require_once realpath($_SERVER['DOCUMENT_ROOT']) . "/assets/php/StdHeader.php";
+require_once "Account.php";
 require_once '../puzzles/Sudoku.php';
 
 $user = "testuser";
 $password = "testpassword";
 $email = "tommy@tommydrum.net";
 
-$agent = new SecurityAgent();
-$agent->LogAction("ACCOUNT:" . $action);
 
-printf("Creating test user");
+echo "Creating test user" . "<br>";
 $account = new Account($user, $password);
 $account->createNew($user, $email, $password);
-printf("Do puzzle tests");
+echo "Do puzzle tests" . "<br>";
 
 printf("Sudoku test");
 $puzzle = new Sudoku();

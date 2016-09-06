@@ -12,17 +12,31 @@ $password = "testpassword";
 $email = "tommy@tommydrum.net";
 
 
+$account = new Account($user, $password, $email);
+if($account == false) $account = new Account($user, $password);
+
+
+//Check that a newly created user account has the correct values
+assert($user == $account->getUsername(), "Check if Account object holds correct username");
+assert(strlen($account->getPasswordHash()) == 60, "Check if Account object has hashed password");
+assert($email == $account->getEmail(), "Check if Account object holds correct email");
+$token = $account->getToken();
+assert(strlen($token) == 17, "Check if token is correct size");
+
+
+//check that a user account can be instantiated with the token
+$account = new Account($token);
+assert($user == $account->getUsername(), "Check if Account object holds correct username");
+assert(strlen($account->getPasswordHash()) == 60, "Check if Account object has hashed password");
+assert($email == $account->getEmail(), "Check if Account object holds correct email");
+$account->getNewToken();
+$token = $account->getToken();
+assert(strlen($token) == 17, "Check if token is correct size");
+
+//check that the new token is up to date iun the database
+$account = new Account($token);
+assert($user == $account->getUsername(), "Check if Account object holds correct username");
+
 $account = new Account($user, $password);
-if($account == null)
-    echo "Register failed.";
-else
-{
-    $account->createNew($user, $email, $password);
-    echo "Registered account, new token is ". $account->getNewToken();
-    echo "Username is ". $account->getUsername();
-    echo "Email is ". $account->getEmail();
-    echo "GetToken returns ". $account->getToken();
-    echo "Password Hash is ". $account->getPasswordHash();
-    echo "Removing account from database";
-    $account->removeFromDatabase();
-}
+$account->removeFromDatabase();
+
