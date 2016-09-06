@@ -13,7 +13,7 @@
     <title>Algorithms Club</title>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/custom.css">
-    <link rel="stylesheet" href="/assets/css/search_user.css">
+    <link rel="stylesheet" href="/assets/css/tests.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 </head>
 <body style="background-color: #eee">
@@ -58,10 +58,11 @@
     function runTest(testScript, element){
         var base = "/assets/php/components/test_wrapper.php?test=";
         var div = element;
-        div.style.fontWeight = "bold";
+        div.className = "list-group-item running";
         get(base + testScript, "", function (data, responsetype) {
             var newstuff = "";
             newstuff += "<span style=\"color: #fff\">" + testScript + "</span> &middot; ";
+            div.className = div.className.replace(/ running/, "");
             if(responsetype == 500){
                 div.className += " list-group-item-danger";
                 newstuff += "<span style=\"color: #FF5555\">Test Failed</span><br>";
