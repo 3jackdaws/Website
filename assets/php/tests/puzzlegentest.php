@@ -1,4 +1,6 @@
 <?php
+//testname: Puzzle Generator Test
+//testdesc: Tests that the TestPuzzle class and generator file work correctly.  If they do, it is easy for new generators to be added.
 /**
  * Created by PhpStorm.
  * User: Cryotech
@@ -14,7 +16,6 @@ $gen->createNewPuzzleTable();
 $gen->createPuzzleUser($account, 0, 10, null); // Generate sample user
 $data = $gen->getPuzzleData($account, 0);
 
-echo $data['datacache'];
 assert(strpos($data['datacache'], "Amadeus") != false , "Assert that getPuzzleData() returns the correct data");
 assert(strpos($data['datacache'], "0") != false , "Assert that getPuzzleData() returns the correct data");
 
@@ -25,20 +26,11 @@ $account = new Account("highscore", "AlsoABadPassword", "email@email.ca");
 $gen->createPuzzleUser($account, 0, 1000, null); // Test top players
 $gen->getPuzzleData($account);
 
-//var_dump($top = $gen->getTopPlayers(10));
 
-echo '<br />';
+$top = $gen->getTopPlayers(10);
+assert($top[0]['username'] == "highscore", "Looking for 'highscore', got '" . $top[0]['username'] . "'");
 
-echo $top[0]['username'];
-//echo $top[0][0];
 
-echo '<br />';
-
-foreach ($top as $score)
-    echo $score['username'] . ' - ' . $score['maxlevel'] . '<br />';
-
-echo '<br />';
-
-assert($gen->verifySolution($account, "blue") == true, "Assert that 'blue' is correct solution"); // GenTest.exe will output true if solution is "blue"
-assert($gen->verifySolution($account, "red") == false, "Assert that 'red' is incorrect solution"); // GenTest.exe will output false if solution is anything else
+assert($gen->verifySolution($account, "blue") === true, "Assert that 'blue' is correct solution"); // GenTest.exe will output true if solution is "blue"
+assert($gen->verifySolution($account, "red") !== true, "Assert that 'red' is incorrect solution"); // GenTest.exe will output false if solution is anything else
 $account->removeFromDatabase();

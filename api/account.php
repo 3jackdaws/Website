@@ -12,7 +12,7 @@ require_once 'Account.php';
 
 $action = RestfulGet("action");
 $user = RestfulGet("user");
-$password = RestfulGet("password");
+$password = RestfulGet("pass");
 $token = RestfulGet("token");
 $email = RestfulGet("email");
 
@@ -22,8 +22,8 @@ switch($action){
     case "register":
     {
         RestRequire(["user", "email", "pass"]);
-        $account = new Account($user, $password);
-        $account->createNew($user, $email, $password);
+        $account = new Account($user, $password, $email);
+        echo "User registered";
         break;
     }
     case "gettoken":
@@ -45,7 +45,7 @@ switch($action){
         else{
             $account = new Account($user, $password);
         }
-        $account->getNewToken();
+        echo json_encode(["token" => $account->getNewToken()]);
         break;
     }
     default:

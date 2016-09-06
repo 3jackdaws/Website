@@ -23,7 +23,7 @@ else if($action == "verify"){
     if($solution == "blue"){
         echo "true";
     }else{
-        echo $solution;
+        echo "Sorry, that's not it!";
     }
 }
 

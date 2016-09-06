@@ -19,23 +19,23 @@ class Account
             $this->createNew($token_or_user, $email, $password);
         }
         if ($password) {
-            $sql = "SELECT * FROM users WHERE username=:user;";
+            $sql = "SELECT * FROM users WHERE username=:username;";
             $statement = Database::connect()->prepare($sql);
-            $statement->bindParam(':user', $token_or_user);
+            $statement->bindParam(':username', $token_or_user);
             $statement->execute();
-            $this->user = $statement->fetch();
-            if($this->user['username']){
-                if(!password_verify($password, $this->user['passwd'])){
-                    $this->user['passwd'] = null;
-                    throw new AuthenticationException("Unknown user and password combination.", $this);
-                }
+            $this->user = $statement->fetch(PDO::FETCH_ASSOC);
+
+            if(!password_verify($password, $this->user['passwd'])){
+                throw new AuthenticationException("Invalid user or password.", $this);
             }
         }else{
             $sql = "SELECT * FROM users WHERE token=:token;";
             $statement = Database::connect()->prepare($sql);
             $statement->bindParam(':token', $token_or_user);
             $statement->execute();
-            $this->user = $statement->fetch();
+            $this->user = $statement->fetch(PDO::FETCH_ASSOC);
+
+            if(strlen($this->user['username']) < 1) throw new AuthenticationException("Invalid token", $this);
         }
     }
 
@@ -46,7 +46,7 @@ class Account
         $stmt->bindParam(":token", $this->user['token']);
         $stmt->bindParam(":user", $this->user['username']);
         if(!$stmt->execute()){
-            var_dump($stmt->errorInfo());
+//            var_dump($stmt->errorInfo());
             return false;
         }else{
             return $this->getToken();
@@ -91,25 +91,25 @@ class Account
     }
 
     public function createNew($user, $email, $password){
-        sleep(1);
-        if(!$this->user['username']){
-            $sql = "INSERT INTO users (username, email, token, passwd) VALUES(:user, :email, :token, :passhash);";
-            $statement = Database::connect()->prepare($sql);
-            $hash = password_hash($password, PASSWORD_BCRYPT);
-            $this->user['username'] = $user;
-            $this->user['token'] = $this->generateToken();
-            $statement->bindParam(':user', $user);
-            $statement->bindParam(':email', $email);
-            $statement->bindParam(':token', $this->user['token']);
-            $statement->bindParam(':passhash', $hash);
-            if(!$statement->execute()){
-                return false;
-            }else{
-                return true;
-            }
+//        sleep(1);
+        //make sure user isn't already in database
+
+        $sql = "INSERT INTO users (username, email, token, passwd) VALUES(:user, :email, :token, :passhash);";
+        $statement = Database::connect()->prepare($sql);
+        $hash = password_hash($password, PASSWORD_BCRYPT);
+        $this->user['username'] = $user;
+        $this->user['token'] = $this->generateToken();
+        $statement->bindParam(':user', $user);
+        $statement->bindParam(':email', $email);
+        $statement->bindParam(':token', $this->user['token']);
+        $statement->bindParam(':passhash', $hash);
+//        echo $hash;
+        if(!$statement->execute()){
+            throw new Exception("User already exists");
         }else{
-            return false;
+            return true;
         }
+
 
     }
 

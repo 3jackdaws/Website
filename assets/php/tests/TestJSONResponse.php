@@ -1,4 +1,6 @@
 <?php
+//testname: JSONResponse Test
+//testdesc: Tests the JSONResponse class.  Neccessary because JSONResponse objects should be used for all user visible data-only repsonses
 /**
  * Created by PhpStorm.
  * User: ian

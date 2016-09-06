@@ -1,4 +1,6 @@
 <?php
+//testname: Account Class Test Functionality
+//testdesc: Tests the various Account methods to make sure they always work.  
 /**
  * Created by PhpStorm.
  * User: Tommy Miller

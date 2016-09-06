@@ -103,7 +103,7 @@ abstract class Puzzle
         foreach($output as $line){
             $data .= $line . "\n";
         }
-        return (strpos($data, "true") !== false ? true : false); // Returns true if file reads "true", else returns false
+        return (strpos(strtolower($data), "true") === 0 ? true : $data); // Returns true if file reads "true", else returns the data given
     }
 
     public function getTopPlayers($number)

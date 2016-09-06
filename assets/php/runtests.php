@@ -35,7 +35,14 @@
             <?php
             $files = glob("./tests/*");
             foreach ($files as $testfile){
-                echo "<a href='#' name=\"test\" onclick='runTest(\"". basename($testfile) . "\", this)' class='list-group-item'>" . basename($testfile) . "</a>";
+                $text = fread(fopen($testfile, "r"), filesize($testfile));
+                preg_match("#(?<=testname:)([ ]?)[a-zA-Z0-9 ]+?(?=\n)#", $text, $match);
+                $test_name = $match[0];
+                if(strpos($test_name, "NOINCLUDE") !== false) continue;
+                preg_match("#(?<=testdesc:).+(?=\n)#", $text, $matches);
+                $test_desc = $matches[0];
+
+                echo "<a href='#' title=\"" . $test_desc . "\" name=\"test\" testfile='". basename($testfile) . "' onclick='runTest(this)' class='list-group-item'>" . $test_name . " - " . basename($testfile) . "</a>";
             }
             ?>
             </div>
@@ -51,13 +58,14 @@
     function runAllTests(){
         var tests = document.getElementsByName("test");
         for(var i = 0; i<tests.length; i++){
-            runTest(tests[i].innerHTML, tests[i]);
+            runTest(tests[i]);
         }
     }
 
-    function runTest(testScript, element){
+    function runTest(element){
         var base = "/assets/php/components/test_wrapper.php?test=";
         var div = element;
+        var testScript = element.getAttribute("testfile");
         div.className = "list-group-item running";
         get(base + testScript, "", function (data, responsetype) {
             var newstuff = "";
