@@ -10,20 +10,12 @@ require_once '../Puzzle.php';
 
 class PuzzleTest extends Puzzle
 {
-    public function verifySolution(Account $user, $pass, $solution)
-    {
-        return true;
-    }
 
 }
 
-
-
 $testPuzzle = new PuzzleTest("TestPuzzle");
 
-$user = new Account("testuser", "testpassword");
-
-$user->createNew("testuser", "tommy@tommydrum.net", "testpassword");
+$user = new Account("testuser", "testpassword", "tommy@tommydrum.net");
 
 if ($testPuzzle->getPuzzleData($user, null) == null)
     printf("Unable to get Puzzle Data");
