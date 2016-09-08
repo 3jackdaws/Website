@@ -19,14 +19,14 @@ class Account
             $this->createNew($token_or_user, $email, $password);
         }
         if ($password) {
-            $sql = "SELECT * FROM users WHERE username=:username;";
+            $sql = "SELECT * FROM users WHERE LOWER(username)=LOWER(:username);";
             $statement = Database::connect()->prepare($sql);
             $statement->bindParam(':username', $token_or_user);
             $statement->execute();
             $this->user = $statement->fetch(PDO::FETCH_ASSOC);
 
             if(!password_verify($password, $this->user['passwd'])){
-                throw new AuthenticationException("Invalid user or password.", $this);
+                throw new Exception("Invalid user or password.");
             }
         }else{
             $sql = "SELECT * FROM users WHERE token=:token;";
@@ -35,7 +35,7 @@ class Account
             $statement->execute();
             $this->user = $statement->fetch(PDO::FETCH_ASSOC);
 
-            if(strlen($this->user['username']) < 1) throw new AuthenticationException("Invalid token", $this);
+            if(strlen($this->user['username']) < 1) throw new Exception("Invalid token");
         }
     }
 
@@ -93,6 +93,13 @@ class Account
     public function createNew($user, $email, $password){
 //        sleep(1);
         //make sure user isn't already in database
+
+        $sql = "SELECT username FROM users WHERE LOWER(username) = LOWER(:username);";
+        $statement = Database::connect()->prepare($sql);
+        $statement->bindParam(":username", $user);
+        $statement->execute();
+        if($statement->fetch() !== false)
+            throw new Exception("User already exists");
 
         $sql = "INSERT INTO users (username, email, token, passwd) VALUES(:user, :email, :token, :passhash);";
         $statement = Database::connect()->prepare($sql);

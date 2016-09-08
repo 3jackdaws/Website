@@ -54,7 +54,7 @@ abstract class Puzzle
             foreach ($output as $line){
                 $data .= $line . "\n";
             }
-            echo $data;
+            
 
             $sql = "UPDATE " . static::$type . " SET datacache=:datacache, level=:level WHERE username=:username;";
             $stmt = Database::connect()->prepare($sql);

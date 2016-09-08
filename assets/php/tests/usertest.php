@@ -13,7 +13,7 @@
 require_once realpath($_SERVER['DOCUMENT_ROOT']) . "/assets/php/StdHeader.php";
 require_once "Account.php";
 
-$user = "testuser";
+$user = "usertest";
 $password = "testpassword";
 $email = "tommy@tommydrum.net";
 
@@ -36,17 +36,16 @@ $returns = file_get_contents("http://localhost/api/account.php?action=gentoken&t
 $token = json_decode($returns)->token;
 $account=new Account($token);
 $token = $account->getToken();
-echo $token;
 assert(json_decode($returns)->token == $token, "Assert that genToken api call works.");
 
 cleanup();
 
 function cleanup(){
     try{
-        $account = new Account("testuser", "testpassword");
+        $account = new Account("usertest", "testpassword");
         $account->removeFromDatabase();
     }catch (Exception $e){
-        echo $e->getMessage();
+        
     }
 }
 

@@ -10,26 +10,49 @@ require_once realpath($_SERVER['DOCUMENT_ROOT']) . "/assets/php/StdHeader.php";
 assert_options(ASSERT_ACTIVE, 1);
 assert_options(ASSERT_WARNING, 0);
 assert_options(ASSERT_QUIET_EVAL, 1);
+
+$GLOBALS['TEST_FAILED'] = false;
+
+function test_end(){
+    if(function_exists("cleanup"))
+        call_user_func("cleanup");
+}
+
+function fail_test(){
+    $GLOBALS['TEST_FAILED'] = true;
+}
+
 function assert_handler($file, $line, $code, $desc = null)
 {
-    echo "<span class='test-fail'>Assertion failed at " . basename($file) . ":$line</span><br>";
+    echo "<span class='assert-fail'>Assertion failed at " . basename($file) . ":$line</span><br>";
     if ($desc) {
         echo "\"$desc\"";
     }
     echo "<br>";
-    call_user_func("cleanup");
-    trigger_error("Test Failed",E_USER_ERROR);
+    fail_test();
 };
+
+register_shutdown_function(function (){
+    test_end();
+    if($GLOBALS['TEST_FAILED']){
+        echo "<span class='test-fail'>Test Failed</span><br>";
+        echo $GLOBALS["TEST_OUTPUT"];
+    }else{
+        echo "<span class='test-pass'>Test Passed</span><br>";
+        echo $GLOBALS["TEST_OUTPUT"];
+    }
+
+
+});
 assert_options(ASSERT_CALLBACK, 'assert_handler');
 set_exception_handler(function(Throwable $exception){
-    echo "PHP Error on line " . $exception->getLine() . " of " . $exception->getFile() . ". " . $exception->getMessage();
-    call_user_func("cleanup");
-    trigger_error("PHP Error: " . $errstr . " at line " . $errline . " in " . $errfile, E_USER_ERROR);
+    echo "PHP Exception on line " . $exception->getLine() . " of " . $exception->getFile() . ". " . $exception->getMessage();
+    fail_test();
 });
 set_error_handler(function($errno, $errstr, $errline, $errfile){
+    if($errno == E_USER_ERROR) trigger_error("Test Failed", E_CORE_ERROR);
     echo "PHP Error: " . $errstr . " at line " . $errline . " in " . $errfile . "<br>";
-    call_user_func("cleanup");
-    trigger_error("PHP Error: " . $errstr . " at line " . $errline . " in " . $errfile, E_USER_ERROR);
+    fail_test();
 });
 
 if(isset($_GET['test'])){
@@ -37,7 +60,8 @@ if(isset($_GET['test'])){
 
     include(realpath($_SERVER['DOCUMENT_ROOT']) . "/assets/php/tests/". $_GET["test"]);
 
-    echo ob_get_clean();
+    $GLOBALS['TEST_OUTPUT'] = ob_get_clean();
+    test_end();
 }else{
     echo "Test file name was not provided<br>";
 }

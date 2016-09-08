@@ -71,13 +71,11 @@
             var newstuff = "";
             newstuff += "<span style=\"color: #fff\">" + testScript + "</span> &middot; ";
             div.className = div.className.replace(/ running/, "");
-            if(responsetype == 500){
+            if(data.search(/test-fail/) != -1){
                 div.className += " list-group-item-danger";
-                newstuff += "<span style=\"color: #FF5555\">Test Failed</span><br>";
             }
-            else if(responsetype == 200){
+            else if(data.search(/test-pass/) != -1){
                 div.className += " list-group-item-success";
-                newstuff += "<span style=\"color: #55FF55\">Test Succeeded</span><br>";
             }
 
             newstuff+= data + "<hr style='border-color: #444'>";
