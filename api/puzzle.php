@@ -21,7 +21,29 @@ function getPuzzleData($puzzle, $level, $user_or_token, $password = null){
         {
             $generator = new Sudoku();
             echo $generator->getPuzzleData($account)['datacache'];
+            echo "<br>" . "Level" . $generator->getPuzzleData($account)['level'];
             break;
+        }
+    }
+}
+
+/**
+ * @param $puzzle
+ * @return Puzzle
+ * @throws Exception
+ *
+ */
+
+function getPuzzleInstance($puzzle){
+    switch(strtolower($puzzle)){
+        case "sudoku":
+        {
+            return new Sudoku();
+            break;
+        }
+        default:
+        {
+            throw new Exception("Unknown Puzzle: " . $puzzle);
         }
     }
 }
@@ -32,6 +54,9 @@ $user = RestfulGet("user");
 $pass = RestfulGet("pass");
 $token = RestfulGet("token");
 $level = RestfulGet("level");
+$solution = RestfulGet("solution");
+
+echo $level;
 
 switch($action){
     case "get":
@@ -42,6 +67,23 @@ switch($action){
             getPuzzleData($puzzle, $level, $token);
         }else{
             getPuzzleData($puzzle, $level, $user, $pass);
+        }
+        break;
+    }
+    case "submit":
+    {
+        if(strlen($pass) > 4){
+            $account = new Account($user, $pass);
+        }else{
+            $account = new Account($token);
+        }
+        $puzzle = getPuzzleInstance("Sudoku");
+        $return = $puzzle->verifySolution($account, $solution);
+        if($return === true){
+            $puzzle->incrementMaxLevel($account);
+            echo "That solution was correct<br>";
+        }else{
+            echo "That solution was wrong";
         }
         break;
     }

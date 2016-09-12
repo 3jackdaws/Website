@@ -68,7 +68,7 @@ abstract class Puzzle
         return $cache;
     }
 
-    protected function incrementMaxLevel(Account $user)
+    public function incrementMaxLevel(Account $user)
     {
         $sql = "UPDATE " . static::$type . " SET maxlevel=maxlevel+1 WHERE username=:user;";
         $stmt = Database::connect()->prepare($sql);
@@ -97,6 +97,7 @@ abstract class Puzzle
         $genuser = $user->getUsername();
         $data = "";
 
+        $solution = "\"" . $solution . "\"";
 
         exec(static::$command . " " . $root . "/" . static::$generator_path . " verify " . $genuser . " " . $cache['level'] . " " . $solution, $output); // Path Output_File User Level
 
