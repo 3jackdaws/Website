@@ -20,19 +20,19 @@ $email = "tommy@tommydrum.net";
 //create new account via public api
 
 
-$returns = file_get_contents("http://localhost/api/account.php?action=register&user=$user&pass=$password&email=$email");
+$returns = file_get_contents("http://algorithms.isogen.net/api/account.php?action=register&user=$user&pass=$password&email=$email");
 assert(strpos($returns, "User registered") !== false, "Assert that 'User registered' found in page source.");
 
-$returns = file_get_contents("http://localhost/api/account.php?action=register&user=$user&pass=tespass&email=$email");
+$returns = file_get_contents("http://algorithms.isogen.net/api/account.php?action=register&user=$user&pass=tespass&email=$email");
 assert(strpos($returns, "User already exists") !== false, "Assert that registering a user with the same username isnt allowed");
 
-$returns = file_get_contents("http://localhost/api/account.php?action=gettoken&user=$user&pass=$password");
+$returns = file_get_contents("http://algorithms.isogen.net/api/account.php?action=gettoken&user=$user&pass=$password");
 
 $account = new Account($user, $password);
 assert(json_decode($returns)->token == $account->getToken(),"Assert that gettoken api call returns correct token");
 
 $token = json_decode($returns)->token;
-$returns = file_get_contents("http://localhost/api/account.php?action=gentoken&token=$token");
+$returns = file_get_contents("http://algorithms.isogen.net/api/account.php?action=gentoken&token=$token");
 $token = json_decode($returns)->token;
 $account=new Account($token);
 $token = $account->getToken();

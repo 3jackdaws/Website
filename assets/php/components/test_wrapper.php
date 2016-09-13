@@ -36,7 +36,7 @@ register_shutdown_function(function (){
     test_end();
     if($GLOBALS['TEST_FAILED']){
         echo "<span class='test-fail'>Test Failed</span><br>";
-        echo $GLOBALS["TEST_OUTPUT"];
+        echo ob_get_clean();
     }else{
         echo "<span class='test-pass'>Test Passed</span><br>";
         echo $GLOBALS["TEST_OUTPUT"];
